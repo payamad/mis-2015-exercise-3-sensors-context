@@ -13,10 +13,12 @@ public class MagnitudeData {
     private FFT mFFT;
     private List<Double> mMagnitudeValues;
     private double[] mFFTTransformedResult;
+    private double[] mAccelerometerData = {0.0d, 0.0d, 0.0d, 0.0d};
 
     public MagnitudeData(int windowSize){
         mWindowSize = (int)Math.pow(2,windowSize);
         mMagnitudeValues = new ArrayList<Double>();
+        mAccelerometerData = new double[4];
         mFFT = new FFT(mWindowSize);
         for(int i=0 ; i < mWindowSize ; i++)
             mMagnitudeValues.add((0.0d));
@@ -64,6 +66,17 @@ public class MagnitudeData {
         return mFFTTransformedResult;
     }
 
+    public double[] GetAccelerometerData(){
+        return mAccelerometerData;
+    }
+
+    public void setAccelerometerData(double x, double y, double z, double mag){
+        mAccelerometerData[0] = x;
+        mAccelerometerData[1] = y;
+        mAccelerometerData[2] = z;
+        mAccelerometerData[3] = mag;
+    }
+
     public String ActivityRecognition()
     {
         double average = 0.0d;
@@ -80,4 +93,5 @@ public class MagnitudeData {
             result = "running";
         return average + " " +result;
     }
+
 }

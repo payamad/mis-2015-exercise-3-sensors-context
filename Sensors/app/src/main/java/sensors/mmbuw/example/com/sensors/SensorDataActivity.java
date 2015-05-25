@@ -26,13 +26,22 @@ public class SensorDataActivity extends ActionBarActivity{
     private int mSampleRateInt = 200000;
     private int mWindowSizeInt = 4;
     private MagnitudeData mMagnitudeData;
+    private AccelerometerView mAccelerometerView;
+    private FFTTransformView mFFTTransformView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor_data);
 
+
         mMagnitudeData = new MagnitudeData(mWindowSizeInt);
+
+        mAccelerometerView = (AccelerometerView) findViewById(R.id.accelerometerView);
+        mAccelerometerView.setMagnitudeData(mMagnitudeData);
+
+        mFFTTransformView = (FFTTransformView) findViewById(R.id.fftTransformView);
+        mFFTTransformView.setMagnitudeData(mMagnitudeData);
 
         sensedata = (TextView) findViewById(R.id.sensedata);
 
@@ -57,6 +66,8 @@ public class SensorDataActivity extends ActionBarActivity{
                 // You can't play this game.
             }
         }
+        mAccelerometerView.setXyzMaximumRange(Math.abs(mSensor.getMaximumRange()));
+
 
 
         /*
@@ -132,6 +143,9 @@ public class SensorDataActivity extends ActionBarActivity{
                 //String str = ax + " " + ay + " " + az + " " + omegaMagnitude;
                 //Toast.makeText(this, str, Toast.LENGTH_LONG);
                 mMagnitudeData.AddToList(omegaMagnitude);
+                mMagnitudeData.setAccelerometerData(ax, ay, az, omegaMagnitude);
+                mAccelerometerView.setMagnitudeData(mMagnitudeData);
+                mFFTTransformView.setMagnitudeData(mMagnitudeData);
                 sensedata.setText(mMagnitudeData.ActivityRecognition() );
 
             }

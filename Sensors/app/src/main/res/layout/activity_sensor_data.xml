@@ -9,17 +9,31 @@
         android:layout_width="wrap_content"
         android:id="@+id/sensedata"
         android:layout_height="wrap_content" />
+    <sensors.mmbuw.example.com.sensors.AccelerometerView
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:id="@+id/accelerometerView"
+        android:layout_below="@id/sensedata"
+        android:background="#bbbbbb"
+    />
     <SeekBar
         android:id="@+id/sampleRate"
-        android:layout_below="@id/sensedata"
+        android:layout_below="@id/accelerometerView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:max="50"
         android:progress="20"
         />
+    <sensors.mmbuw.example.com.sensors.FFTTransformView
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:id="@+id/fftTransformView"
+        android:layout_below="@id/sampleRate"
+        android:background="#bbbbbb"
+        />
     <SeekBar
         android:id="@+id/fftWindowSize"
-        android:layout_below="@id/sampleRate"
+        android:layout_below="@id/fftTransformView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:max="8"
