@@ -1,6 +1,7 @@
 package sensors.mmbuw.example.com.sensors;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,7 +21,6 @@ public class SensorDataActivity extends ActionBarActivity{
 
     private SensorManager mSensorManager;
     private Sensor mSensor;
-    private TextView sensedata;
     private SeekBar mWindowSize, mSampleRate;
     double ax,ay,az;   // these are the acceleration in x,y and z axis
     private int mSampleRateInt = 200000;
@@ -28,6 +28,7 @@ public class SensorDataActivity extends ActionBarActivity{
     private MagnitudeData mMagnitudeData;
     private AccelerometerView mAccelerometerView;
     private FFTTransformView mFFTTransformView;
+    private int mLastActivity = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,6 @@ public class SensorDataActivity extends ActionBarActivity{
 
         mFFTTransformView = (FFTTransformView) findViewById(R.id.fftTransformView);
         mFFTTransformView.setMagnitudeData(mMagnitudeData);
-
-        sensedata = (TextView) findViewById(R.id.sensedata);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null){
@@ -105,6 +104,8 @@ public class SensorDataActivity extends ActionBarActivity{
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
+        startService(new Intent(getBaseContext(), ActivityRecognitionService.class));
     }
 
 
@@ -130,6 +131,10 @@ public class SensorDataActivity extends ActionBarActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    private void ShowCurrentActivity(){
+        Toast.makeText(this, mMagnitudeData.getCurrentActivityText(), Toast.LENGTH_SHORT).show();
+    }
+
     private final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -140,13 +145,15 @@ public class SensorDataActivity extends ActionBarActivity{
                 ay = event.values[1];
                 az = event.values[2];
                 double omegaMagnitude = Math.sqrt(ax * ax + ay * ay + az * az);
-                //String str = ax + " " + ay + " " + az + " " + omegaMagnitude;
-                //Toast.makeText(this, str, Toast.LENGTH_LONG);
+
                 mMagnitudeData.AddToList(omegaMagnitude);
                 mMagnitudeData.setAccelerometerData(ax, ay, az, omegaMagnitude);
                 mAccelerometerView.setMagnitudeData(mMagnitudeData);
                 mFFTTransformView.setMagnitudeData(mMagnitudeData);
-                sensedata.setText(mMagnitudeData.ActivityRecognition() );
+                if(mLastActivity != mMagnitudeData.ActivityRecognition()) {
+                    mLastActivity = mMagnitudeData.ActivityRecognition();
+                    ShowCurrentActivity();
+                }
 
             }
         }

@@ -15,6 +15,13 @@ public class MagnitudeData {
     private double[] mFFTTransformedResult;
     private double[] mAccelerometerData = {0.0d, 0.0d, 0.0d, 0.0d};
 
+    private final static int ACICITY_SITTING = 0;
+    private final static int ACICITY_WALKING = 1;
+    private final static int ACICITY_RUNNING = 2;
+
+    private int mCurrentActivity = 0;
+    private String mCurrentActivityText = "Sitting";
+
     public MagnitudeData(int windowSize){
         mWindowSize = (int)Math.pow(2,windowSize);
         mMagnitudeValues = new ArrayList<Double>();
@@ -77,21 +84,30 @@ public class MagnitudeData {
         mAccelerometerData[3] = mag;
     }
 
-    public String ActivityRecognition()
+    public int ActivityRecognition()
     {
         double average = 0.0d;
-        String result;
         for(int i = 0 ; i < mWindowSize ; i++){
             average += mFFTTransformedResult[i];
         }
         average = average / mWindowSize;
-        if(average < 10.0)
-            result = "idle";
-        else if(average < 15.0)
-            result = "walking";
-        else
-            result = "running";
-        return average + " " +result;
+        if(average < 10.0){
+            mCurrentActivityText = "sitting";
+            mCurrentActivity = ACICITY_SITTING;
+        }
+        else if(average < 15.0) {
+            mCurrentActivityText = "walking";
+            mCurrentActivity = ACICITY_WALKING;
+        }
+        else {
+            mCurrentActivityText = "running";
+            mCurrentActivity = ACICITY_RUNNING;
+        }
+        return mCurrentActivity;
+    }
+
+    public String getCurrentActivityText(){
+        return mCurrentActivityText;
     }
 
 }
