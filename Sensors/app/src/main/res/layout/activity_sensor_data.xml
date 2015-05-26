@@ -5,15 +5,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SensorDataActivity">
 
-    <TextView android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:id="@+id/sensedata"
-        android:layout_height="wrap_content" />
     <sensors.mmbuw.example.com.sensors.AccelerometerView
         android:layout_width="fill_parent"
         android:layout_height="120dp"
         android:id="@+id/accelerometerView"
-        android:layout_below="@id/sensedata"
         android:background="#bbbbbb"
     />
     <SeekBar
